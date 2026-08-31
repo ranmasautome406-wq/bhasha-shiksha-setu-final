@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🖼 Media Library &amp; Documents | Bhasha Shiksha Setu Admin</title>
+<link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body data-page="media">
+<div class="layout">
+  <aside class="sidebar">
+    <div class="side-brand"><span class="side-logo">ब</span><span><b>Bhasha Shiksha Setu</b><small>Admin Panel · SIH26042</small></span></div>
+    <nav class="side-nav">
+      <div class="side-sec">Overview</div>
+      <a href="dashboard.html" data-page="dashboard"><span class="n-ico">📊</span> Dashboard</a>
+      <a href="users.html" data-page="users"><span class="n-ico">👥</span> Users</a>
+      <div class="side-sec">Content</div>
+      <a href="lessons.html" data-page="lessons"><span class="n-ico">📚</span> Lessons</a>
+      <a href="content.html" data-page="content"><span class="n-ico">✏️</span> Content</a>
+      <a href="media.html" data-page="media"><span class="n-ico">🖼</span> Media Library</a>
+      <a href="announcements.html" data-page="announcements"><span class="n-ico">📢</span> Announcements</a>
+      <div class="side-sec">Intelligence</div>
+      <a href="ai.html" data-page="ai"><span class="n-ico">🤖</span> AI Assistant</a>
+      <a href="translations.html" data-page="translations"><span class="n-ico">🌐</span> Translations</a>
+      <a href="analytics.html" data-page="analytics"><span class="n-ico">📈</span> Analytics</a>
+      <a href="activity.html" data-page="activity"><span class="n-ico">🧾</span> Activity Logs</a>
+      <div class="side-sec">System</div>
+      <a href="settings.html" data-page="settings"><span class="n-ico">⚙️</span> Settings</a>
+      <div class="side-sec">Links</div>
+      <a href="/" target="_blank" rel="noopener"><span class="n-ico">🌐</span> View Website</a>
+      <a href="#" data-logout><span class="n-ico">🚪</span> Logout</a>
+    </nav>
+    <div class="side-user"><span class="av" id="sideAvatar">A</span><div><b id="sideName">Admin</b><small id="sideEmail">…</small></div></div>
+    <div class="side-foot"><span>SIH26042</span><span>v1.0</span></div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <button class="burger">☰</button>
+      <h1>🖼 Media Library &amp; Documents</h1>
+      <div class="topsearch"><input type="search" id="globalSearch" placeholder="Search this page…"></div>
+      <div class="top-actions">
+        <div style="position:relative" id="bellWrap">
+          <button class="icon-rounded" id="bellBtn" title="Notifications">🔔<span class="dot"></span></button>
+          <div class="dropdown" id="bellDrop" style="min-width:320px;right:0;left:auto"></div>
+        </div>
+        <div class="profile-chip" id="profileChip">
+          <span class="av" id="profileAvatar">A</span>
+          <div><b id="profileName">…</b><small id="profileEmail">…</small></div>
+          <span style="font-size:10px;color:var(--muted)">▾</span>
+          <div class="dropdown" id="profileDrop">
+            <div class="dd-head"><b id="ddName">Admin</b><small id="ddEmail">…</small></div>
+            <a href="#" data-open-change-pw>🔑 Change password</a>
+            <a href="/" target="_blank" rel="noopener">🌐 View website</a>
+            <a href="#" data-logout class="danger">🚪 Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs" data-tabs>
+      <button class="tab active" data-tab="media">🖼 Media Library</button>
+      <button class="tab" data-tab="docs">📄 Documents</button>
+    </div>
+    <div data-tabpage="media">
+      <div class="upload-zone" id="uploadZone">
+        <span class="big">📤</span><br>
+        <b>Click or drag &amp; drop files here</b><br>
+        <small style="font-weight:600;color:var(--muted)">JPG · PNG · WEBP · SVG · GIF · MP4 · PDF · DOC · TXT (max 50 MB)</small>
+        <input type="file" id="uploadFile" class="hide" multiple accept=".jpg,.jpeg,.png,.webp,.svg,.gif,.mp4,.pdf,.doc,.docx,.txt">
+      </div>
+      <div class="media-grid" id="mediaGrid"></div>
+      <p class="mt" style="font-size:12.5px;color:var(--muted)">💡 Copy a file's URL and use it in lessons, announcements or website content. Uploaded files are available at <code>/uploads/…</code>.</p>
+    </div>
+    <div data-tabpage="docs" class="hide">
+      <div class="card" style="margin-bottom:16px">
+        <h3>Add study document</h3>
+        <form id="docForm">
+          <div class="field-row">
+            <div class="field"><label>Title *</label><input id="docTitle" required maxlength="200"></div>
+            <div class="field"><label>Category</label><input id="docCat" value="Study Material" maxlength="100"></div>
+          </div>
+          <div class="field"><label>Description</label><textarea id="docDesc" maxlength="2000"></textarea></div>
+          <div class="field"><label>Attach file (from media library)</label><select id="docMediaSelect"></select></div>
+          <button class="btn btn-p" type="submit">＋ Add document</button>
+        </form>
+      </div>
+      <div class="tbl"><table>
+        <thead><tr><th>Document</th><th>File</th><th>Added</th><th style="text-align:right">Actions</th></tr></thead>
+        <tbody id="docBody"></tbody>
+      </table></div>
+    </div>
+
+<div class="overlay" data-modal="mediaEditModal">
+  <div class="modal">
+    <button class="icon-btn modal-x" onclick="closeModal('mediaEditModal')">✕</button>
+    <h3>✏️ Edit media details</h3><p class="sub">Title and description appear in the library.</p>
+    <form id="mediaEditForm">
+      <div class="field"><label>Title</label><input id="medTitle" maxlength="200"></div>
+      <div class="field"><label>Description</label><textarea id="medDesc" maxlength="2000"></textarea></div>
+      <button class="btn btn-p" style="width:100%;justify-content:center" type="submit">💾 Save</button>
+    </form>
+  </div>
+</div>
+
+  </main>
+</div>
+<div class="overlay" data-modal="changePwModal">
+  <div class="modal">
+    <button class="icon-btn modal-x" onclick="closeModal('changePwModal')">✕</button>
+    <h3>Change password 🔒</h3><p class="sub">Use a strong password (min 6 characters).</p>
+    <form id="changePwForm">
+      <div class="field"><label>Current password</label><input type="password" id="pwCurrent" required></div>
+      <div class="field"><label>New password</label><input type="password" id="pwNew" minlength="6" required></div>
+      <button class="btn btn-p" style="width:100%;justify-content:center" type="submit">Update password</button>
+    </form>
+  </div>
+</div>
+<div id="toasts"></div>
+<script src="admin.js"></script>
+</body>
+</html>

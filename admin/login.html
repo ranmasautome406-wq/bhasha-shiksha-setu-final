@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login | Bhasha Shiksha Setu</title>
+<link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body class="login-body">
+
+<div class="login-aside">
+  <div class="la-in">
+    <span class="la-logo">ब</span>
+    <span class="trend-pill up" style="background:rgba(255,255,255,.14);color:#e0e7ff">● Smart India Hackathon · SIH26042</span>
+    <h1 style="margin-top:14px">Bhasha Shiksha Setu<br>Admin Control Panel</h1>
+    <p>AI-Powered Vernacular Education for Every Learner</p>
+    <div class="la-feats">
+      <div class="la-feat"><span style="font-size:22px">📊</span><div><b>Live analytics</b><small>Real numbers from the database</small></div></div>
+      <div class="la-feat"><span style="font-size:22px">👥</span><div><b>User management</b><small>Students, teachers, tutors &amp; admins</small></div></div>
+      <div class="la-feat"><span style="font-size:22px">🎨</span><div><b>Full CMS control</b><small>Content, lessons, media, AI &amp; voice</small></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="login-main">
+  <div class="login-card">
+    <h2>Welcome back 👋</h2>
+    <p class="sub">Login with your administrator credentials. Failed attempts are rate-limited and sessions expire automatically.</p>
+    <form id="adminLoginForm">
+      <div class="field">
+        <label>Email / Username</label>
+        <input type="text" id="loginId" required autocomplete="username" placeholder="admin@bhasha.setu">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <button class="btn btn-p" style="width:100%;justify-content:center;padding:13px" id="loginBtn" type="submit">🔐 Login to Dashboard</button>
+    </form>
+    <div class="login-note">💡 Demo admin: <b>admin@bhasha.setu</b> / <b>Admin@123</b><br>
+      Change it: <code>python create_admin.py</code> or in <code>.env</code></div>
+    <p style="margin-top:18px;font-size:13px;text-align:center"><a href="/" style="color:var(--p1);font-weight:700">← Back to website</a></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  try {
+    const user = JSON.parse(localStorage.getItem("bss_user") || "null");
+    if (user && user.role === "admin" && localStorage.getItem("bss_token")) {
+      window.location.href = "dashboard.html";
+      return;
+    }
+  } catch (e) {}
+
+  function toast(msg, type) {
+    let box = document.getElementById("toasts");
+    if (!box) { box = document.createElement("div"); box.id = "toasts"; document.body.appendChild(box); }
+    const t = document.createElement("div");
+    t.className = "toast " + (type || "ok");
+    t.textContent = msg;
+    box.appendChild(t);
+    setTimeout(() => t.remove(), 3500);
+  }
+
+  document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById("loginBtn");
+    btn.disabled = true; btn.textContent = "Checking…";
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          identifier: document.getElementById("loginId").value.trim(),
+          password: document.getElementById("loginPassword").value,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message || "Login failed.");
+      if (data.data.user.role !== "admin") throw new Error("This account is not an administrator. Access denied.");
+      localStorage.setItem("bss_token", data.data.token);
+      localStorage.setItem("bss_user", JSON.stringify(data.data.user));
+      toast("Welcome, " + data.data.user.name + "!");
+      setTimeout(() => { window.location.href = "dashboard.html"; }, 350);
+    } catch (err) {
+      toast(err.message, "err");
+      btn.disabled = false; btn.textContent = "🔐 Login to Dashboard";
+    }
+  });
+})();
+</script>
+</body>
+</html>

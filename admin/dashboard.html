@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | Bhasha Shiksha Setu Admin</title>
+<link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body data-page="dashboard">
+<div class="layout">
+  <aside class="sidebar">
+    <div class="side-brand"><span class="side-logo">ब</span><span><b>Bhasha Shiksha Setu</b><small>Admin Panel · SIH26042</small></span></div>
+    <nav class="side-nav">
+      <div class="side-sec">Overview</div>
+      <a href="dashboard.html" data-page="dashboard"><span class="n-ico">📊</span> Dashboard</a>
+      <a href="users.html" data-page="users"><span class="n-ico">👥</span> Users</a>
+      <div class="side-sec">Content</div>
+      <a href="lessons.html" data-page="lessons"><span class="n-ico">📚</span> Lessons</a>
+      <a href="content.html" data-page="content"><span class="n-ico">✏️</span> Content</a>
+      <a href="media.html" data-page="media"><span class="n-ico">🖼</span> Media Library</a>
+      <a href="announcements.html" data-page="announcements"><span class="n-ico">📢</span> Announcements</a>
+      <div class="side-sec">Intelligence</div>
+      <a href="ai.html" data-page="ai"><span class="n-ico">🤖</span> AI Assistant</a>
+      <a href="translations.html" data-page="translations"><span class="n-ico">🌐</span> Translations</a>
+      <a href="analytics.html" data-page="analytics"><span class="n-ico">📈</span> Analytics</a>
+      <a href="activity.html" data-page="activity"><span class="n-ico">🧾</span> Activity Logs</a>
+      <div class="side-sec">System</div>
+      <a href="settings.html" data-page="settings"><span class="n-ico">⚙️</span> Settings</a>
+      <div class="side-sec">Links</div>
+      <a href="/" target="_blank" rel="noopener"><span class="n-ico">🌐</span> View Website</a>
+      <a href="#" data-logout><span class="n-ico">🚪</span> Logout</a>
+    </nav>
+    <div class="side-user"><span class="av" id="sideAvatar">A</span><div><b id="sideName">Admin</b><small id="sideEmail">…</small></div></div>
+    <div class="side-foot"><span>SIH26042</span><span>v1.0</span></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="burger">☰</button>
+      <div class="topsearch"><input type="search" id="globalSearch" placeholder="Search this page…"></div>
+      <div class="top-actions">
+        <div style="position:relative" id="bellWrap">
+          <button class="icon-rounded" id="bellBtn" title="Notifications">🔔<span class="dot"></span></button>
+          <div class="dropdown" id="bellDrop" style="min-width:320px;right:0;left:auto"></div>
+        </div>
+        <div class="profile-chip" id="profileChip">
+          <span class="av" id="profileAvatar">A</span>
+          <div><b id="profileName">…</b><small id="profileEmail">…</small></div>
+          <span style="font-size:10px;color:var(--muted)">▾</span>
+          <div class="dropdown" id="profileDrop">
+            <div class="dd-head"><b id="ddName">Admin</b><small id="ddEmail">…</small></div>
+            <a href="#" data-open-change-pw>🔑 Change password</a>
+            <a href="/" target="_blank" rel="noopener">🌐 View website</a>
+            <a href="#" data-logout class="danger">🚪 Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="welcome">
+      <span class="w-ico">👋</span>
+      <div><h2>Welcome back, <span id="welcomeName">Admin</span>!</h2>
+        <p>Here's what's happening on Bhasha Shiksha Setu today.</p></div>
+      <span class="w-date" id="welcomeDate"></span>
+    </div>
+
+    <div class="stats" id="statGrid"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px" id="todayChips"></div>
+
+    <div class="two-col even">
+      <div class="card"><h3>📈 User growth &amp; activity <span class="hint">last 14 days</span></h3>
+        <div class="chart-box"><canvas id="chartGrowth"></canvas></div></div>
+      <div class="card"><h3>🤖 AI usage <span class="hint">last 14 days</span></h3>
+        <div class="chart-box"><canvas id="chartAI"></canvas></div></div>
+    </div>
+
+    <div class="two-col even mt">
+      <div class="card"><h3>🌐 Language usage <span class="hint">chat questions</span></h3>
+        <div class="chart-box sm"><canvas id="chartLangs"></canvas></div></div>
+      <div class="card"><h3>✅ Lesson completion
+        <span class="hint" id="completionRate"></span></h3>
+        <div class="chart-box sm"><canvas id="chartCompletion"></canvas></div>
+        <div id="subjectBars" style="margin-top:12px"></div></div>
+    </div>
+
+    <div class="card mt"><h3>🗞 Recent activity</h3><div id="recentActivity"><div class="empty">Loading…</div></div></div>
+  </main>
+</div>
+
+<div class="overlay" data-modal="changePwModal">
+  <div class="modal">
+    <button class="icon-btn modal-x" onclick="closeModal('changePwModal')">✕</button>
+    <h3>Change password 🔒</h3><p class="sub">Use a strong password (min 6 characters).</p>
+    <form id="changePwForm">
+      <div class="field"><label>Current password</label><input type="password" id="pwCurrent" required></div>
+      <div class="field"><label>New password</label><input type="password" id="pwNew" minlength="6" required></div>
+      <button class="btn btn-p" style="width:100%;justify-content:center" type="submit">Update password</button>
+    </form>
+  </div>
+</div>
+<div id="toasts"></div>
+
+<script src="assets/vendor/chart.umd.min.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

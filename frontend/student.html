@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dashboard | Bhasha Shiksha Setu</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%234338ca'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white'>ब</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="CSS/style.css">
+</head>
+<body data-page="student">
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html"><span class="brand-logo">ब</span><span>Bhasha Shiksha Setu<small>Student Mode</small></span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="student.html" class="active">Student</a>
+      <a href="teacher.html">Teacher</a>
+      <a href="tutor.html">AI Tutor</a>
+    </nav>
+    <div class="nav-right">
+      <div class="nav-user-chip" data-auth="in">
+        <span class="av" id="navUserAvatar">?</span><b id="navUserName">…</b>
+        <button class="icon-btn" data-logout title="Logout" style="font-size:16px">🚪</button>
+      </div>
+      <button class="btn btn-outline btn-sm hide-mobile" data-auth="out" onclick="openModal('loginModal')">Login</button>
+      <button class="btn btn-primary btn-sm" data-auth="out" onclick="openModal('registerModal')">Get Started</button>
+      <button class="icon-btn burger" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="dash-layout">
+  <!-- ======== SIDEBAR ======== -->
+  <aside class="dash-side">
+    <div class="who">
+      <span class="av" id="sideAvatar">?</span>
+      <div><b id="sideName">Student</b><small id="sideEmail">Login to see your stats</small></div>
+    </div>
+    <button class="side-item active" data-view="dashboard"><span class="s-ico">🏠</span> Dashboard</button>
+    <button class="side-item" data-view="lessons"><span class="s-ico">📚</span> My Lessons</button>
+    <button class="side-item" data-view="explore"><span class="s-ico">🧭</span> Explore</button>
+    <button class="side-item" data-view="tutor"><span class="s-ico">🤖</span> AI Tutor</button>
+    <button class="side-item" data-view="progress"><span class="s-ico">📊</span> Progress</button>
+    <button class="side-item" data-view="saved"><span class="s-ico">🔖</span> Saved</button>
+    <button class="side-item" data-view="settings"><span class="s-ico">⚙️</span> Settings</button>
+  </aside>
+
+  <!-- ======== MAIN ======== -->
+  <main class="dash-main">
+    <div class="auth-note hide" id="loginNote">🔐 Please <a href="#" onclick="openModal('loginModal');return false"><b>login</b></a> or <a href="#" onclick="openModal('registerModal');return false"><b>register</b></a> to see your personal dashboard — progress, saved lessons and recommendations.</div>
+
+    <!-- Dashboard view -->
+    <section data-view-panel="dashboard">
+      <div class="greet"><h1 id="dashTitle">Good morning, Student 👋</h1><p id="dashSub">Your learning at a glance — connected to the Bhasha Shiksha Setu backend.</p></div>
+
+      <div class="kpi-strip">
+        <div class="kpi"><div class="k-top"><span class="k-ico" style="background:var(--psoft)">📖</span><span class="trend up">library</span></div><b id="stTotal">–</b><span>Total lessons</span></div>
+        <div class="kpi"><div class="k-top"><span class="k-ico" style="background:var(--success-soft)">✅</span><span class="trend up">done</span></div><b id="stDone">–</b><span>Completed</span></div>
+        <div class="kpi"><div class="k-top"><span class="k-ico" style="background:var(--accent-soft)">⏳</span><span class="trend flat">in progress</span></div><b id="stProgress">–</b><span>In progress</span></div>
+        <div class="kpi"><div class="k-top"><span class="k-ico" style="background:var(--teal-soft)">🔖</span><span class="trend flat">saved</span></div><b id="stSaved">–</b><span>Saved lessons</span></div>
+      </div>
+
+      <div class="sec-card">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+          <b style="font-size:16px">📈 Learning progress</b><span id="avgLabel" style="color:var(--muted);font-size:13.5px">–</span>
+        </div>
+        <div class="progress-track" style="height:12px"><div class="progress-fill" id="avgBar" style="width:0%"></div></div>
+        <p style="font-size:13.5px;color:var(--muted);margin-top:10px" id="aiStatsLine">You asked the AI Tutor 0 questions and translated 0 texts.</p>
+      </div>
+
+      <div class="view-head"><h2>▶️ Continue learning</h2><button class="btn btn-soft btn-sm" data-goto="explore">Explore all lessons →</button></div>
+      <div class="grid g2" id="continueGrid"></div>
+
+      <div class="view-head"><h2>✨ Recommended for you</h2></div>
+      <div class="grid g3" id="recGrid"></div>
+
+      <div class="view-head"><h2>🕐 Recent lessons</h2></div>
+      <div class="grid g3" id="recentGrid"></div>
+    </section>
+
+    <!-- My lessons -->
+    <section data-view-panel="lessons" class="hide">
+      <div class="greet"><h1>📚 My lessons</h1><p>Everything you have started, saved or completed.</p></div>
+      <div class="grid g3" id="myLessonsGrid" style="margin-top:26px"></div>
+    </section>
+
+    <!-- Explore -->
+    <section data-view-panel="explore" class="hide">
+      <div class="greet"><h1>🧭 Explore lessons</h1><p>Browse the full library — filter by subject.</p></div>
+      <div class="pill-row" id="subjectPills" style="margin-top:22px">
+        <button class="filter-pill active" data-subject="">All</button>
+        <button class="filter-pill" data-subject="Science">Science</button>
+        <button class="filter-pill" data-subject="Mathematics">Mathematics</button>
+        <button class="filter-pill" data-subject="English">English</button>
+        <button class="filter-pill" data-subject="Computer Science">Computer Science</button>
+      </div>
+      <div class="grid g3" id="lessonGrid"></div>
+    </section>
+
+    <!-- AI Tutor -->
+    <section data-view-panel="tutor" class="hide">
+      <div class="greet"><h1>🤖 Bhasha AI Tutor</h1><p>Your 24×7 study friend — type or speak in any language.</p></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px">
+        <button class="btn btn-primary btn-lg" onclick="BSS_AI.open()">💬 Open AI Assistant</button>
+        <a class="btn btn-outline btn-lg" href="tutor.html">Full chat page →</a>
+      </div>
+      <div class="grid g3" style="margin-top:26px">
+        <div class="card"><div class="ico-tile tile-p">🧪</div><h3>Ask science</h3><p>“Explain photosynthesis in Marathi”</p></div>
+        <div class="card"><div class="ico-tile tile-v">➗</div><h3>Ask maths</h3><p>“Why is 3/4 bigger than 1/2?”</p></div>
+        <div class="card"><div class="ico-tile tile-a">🗣</div><h3>Any language</h3><p>Get answers in the language you think in.</p></div>
+      </div>
+    </section>
+
+    <!-- Progress -->
+    <section data-view-panel="progress" class="hide">
+      <div class="greet"><h1>📊 Your progress</h1><p>How far you've come in every lesson you started.</p></div>
+      <div class="sec-card" id="progressList" style="margin-top:24px"></div>
+    </section>
+
+    <!-- Saved -->
+    <section data-view-panel="saved" class="hide">
+      <div class="greet"><h1>🔖 Saved lessons</h1><p>Your bookmarks — ready when you are.</p></div>
+      <div class="grid g3" id="savedGrid" style="margin-top:24px"></div>
+    </section>
+
+    <!-- Settings -->
+    <section data-view-panel="settings" class="hide">
+      <div class="greet"><h1>⚙️ Settings</h1><p>Your preferences and account.</p></div>
+      <div class="grid g2" style="margin-top:24px">
+        <div class="card">
+          <h3>🗣 Language preference</h3>
+          <p style="margin-bottom:14px">Lessons, translation and the AI Tutor favour this language.</p>
+          <select class="lang-select" id="prefLang" data-langs style="width:100%;max-width:100%;padding:12px 15px;border-radius:12px"></select>
+          <button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="saveLangPref()">💾 Save preference</button>
+        </div>
+        <div class="card">
+          <h3>👤 Account</h3>
+          <div id="accountInfo" style="color:var(--muted);font-size:14px;margin-bottom:14px">—</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-outline btn-sm" onclick="openModal('loginModal')">🔑 Change password</button>
+            <button class="btn btn-danger btn-sm" data-logout>🚪 Logout</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="container footer-base"><span>© 2026 Bhasha Shiksha Setu · SIH26042</span><span>Student Mode — connected to backend 🎒</span></div>
+</footer>
+
+<div class="overlay" id="loginModal">
+  <div class="modal">
+    <button class="icon-btn modal-x" onclick="closeModal('loginModal')">✕</button>
+    <h3>Welcome back 👋</h3><p class="sub">Login to continue as a student.</p>
+    <form id="loginForm">
+      <div class="field"><label>Email / Username</label><input id="loginId" type="text" required></div>
+      <div class="field"><label>Password</label><input id="loginPassword" type="password" required></div>
+      <button class="btn btn-primary btn-block" id="loginSubmit" type="submit">Login</button>
+    </form>
+    <p style="font-size:13px;color:var(--muted);margin-top:12px;text-align:center">New here? Use the Register button in the navbar.</p>
+  </div>
+</div>
+
+<div class="overlay" id="registerModal">
+  <div class="modal">
+    <button class="icon-btn modal-x" onclick="closeModal('registerModal')">✕</button>
+    <h3>Create your free account 🎒</h3><p class="sub">Register to save lessons and track progress.</p>
+    <form id="registerForm">
+      <div class="field"><label>Full name</label><input id="regName" type="text" required></div>
+      <div class="field"><label>Email</label><input id="regEmail" type="email" required></div>
+      <div class="field"><label>Password (min 6 chars)</label><input id="regPassword" type="password" minlength="6" required></div>
+      <div class="field"><label>Preferred language</label><select id="regLang" data-langs></select></div>
+      <button class="btn btn-accent btn-block" id="registerSubmit" type="submit">Create Account</button>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="lessonModal">
+  <div class="modal lg">
+    <button class="icon-btn modal-x" onclick="closeModal('lessonModal')">✕</button>
+    <div id="lessonModalBody"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px;flex-wrap:wrap">
+      <button class="btn btn-outline btn-sm" id="saveLessonBtn">🔖 Save</button>
+      <button class="btn btn-primary btn-sm" id="completeLessonBtn">✅ Mark complete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let __dashData = null;
+let __currentLessonId = null;
+
+function switchView(name) {
+  $$(".side-item").forEach(b => b.classList.toggle("active", b.dataset.view === name));
+  $$("[data-view-panel]").forEach(p => p.classList.toggle("hide", p.dataset.viewPanel !== name));
+  if (name === "explore") BSS_LESSONS.render("#lessonGrid");
+}
+
+function studentCard(l, d) {
+  const row = (d.progress.rows || []).find(r => r.lesson_id === l.id);
+  const done = row && row.status === "completed";
+  const saved = row && row.saved;
+  const pct = row ? row.progress : 0;
+  return `
+  <div class="card lesson-card" data-lesson-id="${l.id}">
+    <div class="lesson-meta">
+      <span class="chip subj">${escapeHtml(l.subject)}</span>
+      <span class="chip lang">🗣 ${escapeHtml(l.language)}</span>
+      ${l.grade ? `<span class="chip grade">Class ${escapeHtml(l.grade)}</span>` : ""}
+      ${done ? '<span class="chip pub">✅ completed</span>' : ""}
+      ${saved ? '<span class="chip gray">🔖 saved</span>' : ""}
+    </div>
+    <h3>${escapeHtml(l.title)}</h3>
+    <p>${escapeHtml((l.description || "").slice(0, 96))}${(l.description || "").length > 96 ? "…" : ""}</p>
+    ${row ? `<div class="progress-row"><div class="progress-track grow"><div class="progress-fill" style="width:${pct}%"></div></div><b style="font-size:13px">${pct}%</b></div>` : ""}
+    <button class="btn btn-primary btn-sm" onclick="BSS_LESSONS.open(${l.id})">Open →</button>
+  </div>`;
+}
+
+async function saveLangPref() {
+  try {
+    await api("/student/language", { method: "PUT", body: { language_preference: $("#prefLang").value } });
+    toast("Language preference saved 🗣");
+  } catch (e) { toast(e.message, "err"); }
+}
+
+window.PAGE_INIT = async function () {
+  // Sidebar view switching
+  $$(".side-item").forEach(b => b.addEventListener("click", () => {
+    if (b.dataset.view === "tutor") { BSS_AI.open(); return; }
+    switchView(b.dataset.view);
+  }));
+  $$("[data-goto]").forEach(b => b.addEventListener("click", () => switchView(b.dataset.goto)));
+  $$("#subjectPills .filter-pill").forEach(pill => pill.addEventListener("click", () => {
+    $$("#subjectPills .filter-pill").forEach(p => p.classList.remove("active"));
+    pill.classList.add("active");
+    BSS_LESSONS.render("#lessonGrid", { subject: pill.dataset.subject });
+  }));
+
+  const user = currentUser();
+  const note = $("#loginNote");
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+
+  if (!user) {
+    note.classList.remove("hide");
+    $("#dashTitle").textContent = `${greet}, Learner 👋`;
+    $("#dashSub").textContent = "Login to unlock your personal dashboard — progress, saves and recommendations.";
+    ["#stTotal", "#stDone", "#stProgress", "#stSaved"].forEach(s => $(s).textContent = "—");
+    $("#avgBar").style.width = "0%";
+    switchView("explore");
+    return;
+  }
+
+  $("#sideAvatar").textContent = initials(user.name);
+  $("#sideName").textContent = user.name;
+  $("#sideEmail").textContent = user.email;
+
+  try {
+    const d = await api("/student/dashboard");
+    __dashData = d;
+    $("#dashTitle").textContent = `${greet}, ${d.profile.name.split(" ")[0]} 👋`;
+    $("#dashSub").textContent = "Let's keep your streak going — pick up where you left off.";
+
+    const s = d.stats;
+    $("#stTotal").textContent = s.total_lessons;
+    $("#stDone").textContent = s.completed;
+    $("#stProgress").textContent = s.in_progress;
+    $("#stSaved").textContent = s.saved;
+    $("#avgBar").style.width = Math.max(s.avg_progress, 4) + "%";
+    $("#avgLabel").textContent = `${s.avg_progress}% average across started lessons`;
+
+    try {
+      const st = await api("/student/stats");
+      $("#aiStatsLine").textContent = `You asked the AI Tutor ${st.ai_questions} questions and translated ${st.translations} texts.`;
+    } catch {}
+
+    // Continue learning: started but not completed, sorted by updated
+    const started = (d.progress.rows || []).filter(r => r.progress > 0 && r.status !== "completed")
+      .sort((a, b) => (b.updated_at || "").localeCompare(a.updated_at || ""));
+    const continueLessons = started.slice(0, 4)
+      .map(r => db_lesson(d, r.lesson_id)).filter(Boolean);
+    $("#continueGrid").innerHTML = continueLessons.length
+      ? continueLessons.map(l => studentCard(l, d)).join("")
+      : `<div class="empty" style="grid-column:1/-1"><div class="big">🚀</div>Nothing in progress — <b>start a lesson below!</b></div>`;
+
+    $("#recGrid").innerHTML = d.recommended_lessons.length
+      ? d.recommended_lessons.map(l => studentCard(l, d)).join("")
+      : '<div class="empty" style="grid-column:1/-1"><div class="big">🎉</div>All caught up!</div>';
+
+    $("#recentGrid").innerHTML = d.recent_lessons.length
+      ? d.recent_lessons.map(l => studentCard(l, d)).join("")
+      : "";
+
+    // My lessons view
+    const all = await api("/lessons");
+    $("#myLessonsGrid").innerHTML = all.length
+      ? all.map(l => studentCard(l, d)).join("")
+      : '<div class="empty" style="grid-column:1/-1"><div class="big">📚</div>No lessons yet.</div>';
+
+    // Progress view
+    const rows = (d.progress.rows || []).slice().sort((a, b) => (b.updated_at || "").localeCompare(a.updated_at || ""));
+    $("#progressList").innerHTML = rows.length ? rows.map(r => {
+      const l = db_lesson(d, r.lesson_id);
+      return `
+      <div class="progress-row" style="padding:13px 0;border-bottom:1px solid var(--line)">
+        <span class="k-ico" style="background:${r.status === "completed" ? "var(--success-soft)" : "var(--psoft)"};width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:18px">${r.status === "completed" ? "✅" : "📖"}</span>
+        <div class="grow">
+          <b style="font-size:14.5px">${l ? escapeHtml(l.title) : "Lesson #" + r.lesson_id}</b>
+          <div class="progress-track" style="margin-top:6px"><div class="progress-fill" style="width:${r.progress}%"></div></div>
+        </div>
+        <b style="font-size:13.5px;min-width:46px;text-align:right">${r.progress}%</b>
+      </div>`;
+    }).join("") : '<div class="empty"><div class="big">📊</div>No progress yet — open a lesson to start!</div>';
+
+    // Saved view
+    $("#savedGrid").innerHTML = d.saved_lessons.length
+      ? d.saved_lessons.map(l => studentCard(l, d)).join("")
+      : '<div class="empty" style="grid-column:1/-1"><div class="big">🔖</div>Nothing saved yet — open a lesson and press Save.</div>';
+
+    // Settings: profile + pref
+    $("#prefLang").value = d.language_preference || "English";
+    $("#accountInfo").innerHTML = `
+      <b style="color:var(--ink)">${escapeHtml(d.profile.name)}</b> · ${escapeHtml(d.profile.email)}<br>
+      Role: <span class="chip" style="background:var(--psoft);color:var(--p1)">${escapeHtml(d.profile.role)}</span>
+      · Joined ${fmtDate(d.profile.created_at)}`;
+
+    // Save + complete buttons in lesson modal
+    const origOpen = BSS_LESSONS.open;
+    BSS_LESSONS.open = async function (id) {
+      __currentLessonId = id;
+      await origOpen(id);
+      const row = (d.progress.rows || []).find(r => r.lesson_id === id);
+      $("#saveLessonBtn").textContent = row && row.saved ? "🔖 Saved ✓" : "🔖 Save";
+      $("#completeLessonBtn").textContent = row && row.status === "completed" ? "✅ Completed" : "✅ Mark complete";
+    };
+  } catch (e) {
+    note.classList.remove("hide");
+    note.textContent = "⚠️ " + e.message;
+  }
+};
+
+function db_lesson(d, id) {
+  return [...(d.recommended_lessons || []), ...(d.recent_lessons || []),
+          ...(d.completed_lessons || []), ...(d.saved_lessons || [])].find(l => l.id === id);
+}
+
+/* Save / complete buttons */
+document.addEventListener("click", async (e) => {
+  if (!__dashData) return;
+  if (e.target.closest("#saveLessonBtn") && __currentLessonId) {
+    try {
+      const r = await api(`/student/lessons/${__currentLessonId}/save`, { method: "POST" });
+      toast(r.saved ? "Lesson saved 🔖" : "Removed from saved.");
+      PAGE_INIT();
+    } catch (err) { toast(err.message, "err"); }
+  }
+  if (e.target.closest("#completeLessonBtn") && __currentLessonId) {
+    try {
+      await api("/student/progress", { method: "POST", body: { lesson_id: __currentLessonId, status: "completed", progress: 100 } });
+      toast("Lesson completed! 🎉");
+      PAGE_INIT();
+    } catch (err) { toast(err.message, "err"); }
+  }
+});
+</script>
+<script src="script.js"></script>
+</body>
+</html>

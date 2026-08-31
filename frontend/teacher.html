@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Dashboard | Bhasha Shiksha Setu</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%234338ca'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white'>ब</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="CSS/style.css">
+</head>
+<body data-page="teacher">
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html"><span class="brand-logo">ब</span><span>Bhasha Shiksha Setu<small>Teacher Mode</small></span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="student.html">Student</a>
+      <a href="teacher.html" class="active">Teacher</a>
+      <a href="tutor.html">AI Tutor</a>
+    </nav>
+    <div class="nav-right">
+      <div class="nav-user-chip" data-auth="in">
+        <span class="av" id="navUserAvatar">?</span><b id="navUserName">…</b>
+        <button class="icon-btn" data-logout title="Logout" style="font-size:16px">🚪</button>
+      </div>
+      <button class="btn btn-outline btn-sm hide-mobile" data-auth="out" onclick="openModal('loginModal')">Login</button>
+      <button class="icon-btn burger" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="dash-layout">
+  <aside class="dash-side">
+    <div class="who">
+      <span class="av" id="sideAvatar">?</span>
+      <div><b id="sideName">Teacher</b><small id="sideEmail">Login to manage lessons</small></div>
+    </div>
+    <button class="side-item active" data-view="dashboard"><span class="s-ico">🏠</span> Dashboard</button>
+    <button class="side-item" data-view="lessons"><span class="s-ico">📚</span> My Lessons</button>
+    <button class="side-item" data-view="create"><span class="s-ico">＋</span> Create Lesson</button>
+    <button class="side-item" data-view="students"><span class="s-ico">🧑‍🎓</span> Students</button>
+    <button class="side-item" data-view="resources"><span class="s-ico">📁</span> Resources</button>
+    <button class="side-item" data-view="aitools"><span class="s-ico">🤖</span> AI Tools</button>
+    <button class="side-item" data-view="analytics"><span class="s-ico">📊</span> Analytics</button>
+    <button class="side-item" data-view="settings"><span class="s-ico">⚙️</span> Settings</button>
+  </aside>
+
+  <main class="dash-main">
+    <div class="auth-note hide" id="loginNote">🔐 This is the <b>Teacher Dashboard</b>. Login with a teacher account (<b>teacher@demo.setu</b> / <b>Demo@123</b>) — or ask an admin to create one.</div>
+
+    <!-- Dashboard -->
+    <section data-view-panel="dashboard">
+      <div class="greet"><h1 id="tGreet">Welcome, Teacher 👋</h1><p>Create lessons, upload material, and watch your students learn.</p></div>
+      <div class="kpi-strip">
+        <div class="kpi"><div class="k-top"><span class="k-ico" style="background:var(--psoft)">👥</span><span class="trend up">platform</span></div><b id="tStudents">–</b><span>Students</span></div>
+        <div class="kpi"><div class="k-top"><span class="k-ico" style="background:var(--teal-soft)">📚</span><span class="trend up">created</span></div><b id="tMyLessons">–</b><span>My lessons</span></div>
+        <div class="kpi"><div class="k-top"><span class="k-ico" style="background:var(--success-soft)">✅</span><span class="trend up">live</span></div><b id="tPublished">–</b><span>Published</span></div>
+        <div class="kpi"><div class="k-top"><span class="k-ico" style="background:var(--accent-soft)">👀</span><span class="trend up">views</span></div><b id="tViews">–</b><span>Total views</span></div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px">
+        <button class="btn btn-primary" id="newLessonBtn">＋ Create New Lesson</button>
+        <button class="btn btn-outline" data-goto="resources">📁 Upload material</button>
+      </div>
+      <div class="view-head"><h2>📚 Your recent lessons</h2></div>
+      <div class="grid g3" id="dashLessons"></div>
+      <div class="view-head"><h2>🧑‍🎓 Student activity</h2></div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Lesson</th><th>Progress</th><th>Status</th><th>Last updated</th></tr></thead>
+          <tbody id="studentsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- My lessons (table) -->
+    <section data-view-panel="lessons" class="hide">
+      <div class="greet"><h1>📚 My lessons</h1><p>Edit, publish or unpublish — changes appear for students instantly. <span class="page-drafts-badge" style="font-weight:600;color:var(--accent)"></span></p></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin:18px 0">
+        <button class="btn btn-primary btn-sm" id="newLessonBtn2">＋ New Lesson</button>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Lesson</th><th>Subject</th><th>Language</th><th>Class</th><th>Views</th><th>Status</th><th style="text-align:right">Actions</th></tr></thead>
+          <tbody id="lessonsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Students -->
+    <section data-view-panel="students" class="hide">
+      <div class="greet"><h1>🧑‍🎓 Students</h1><p>Who is learning from your lessons right now.</p></div>
+      <div class="tbl-wrap" style="margin-top:22px">
+        <table>
+          <thead><tr><th>Student</th><th>Lesson</th><th>Progress</th><th>Status</th><th>Last updated</th></tr></thead>
+          <tbody id="studentsBody2"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Create lesson placeholder view (opens editor) -->
+    <section data-view-panel="create" class="hide">
+      <div class="greet"><h1>＋ Create Lesson</h1><p>Title, subject, language, class, media blocks — and publish when ready.</p></div>
+      <div class="sec-card" style="margin-top:22px;text-align:center;padding:50px">
+        <div class="big" style="font-size:46px">📝</div>
+        <h3 style="margin:10px 0">Let's build a great lesson!</h3>
+        <p style="margin-bottom:20px">Text · Images · Videos · PDFs — all in one beautiful lesson card.</p>
+        <button class="btn btn-primary btn-lg" id="newLessonBtn3">Open Lesson Editor</button>
+      </div>
+    </section>
+
+    <!-- Resources -->
+    <section data-view-panel="resources" class="hide">
+      <div class="greet"><h1>📁 Resources</h1><p>Upload study material — images, PDFs, videos — and reuse them in lessons.</p></div>
+      <div class="sec-card" style="margin-top:22px">
+        <h3>📤 Upload media</h3>
+        <p style="color:var(--muted);font-size:13.5px;margin-bottom:14px">Images (jpg/png/webp/svg), videos (mp4) or documents (pdf/doc/txt). Max 50 MB.</p>
+        <div class="field"><label>File</label><input type="file" id="upFile" accept=".jpg,.jpeg,.png,.webp,.svg,.gif,.mp4,.pdf,.doc,.docx,.txt"></div>
+        <div class="field-row">
+          <div class="field"><label>Title (optional)</label><input id="upTitle" maxlength="200"></div>
+          <div class="field"><label>Description (optional)</label><input id="upDesc" maxlength="2000"></div>
+        </div>
+        <button class="btn btn-primary" id="upBtn">⬆ Upload</button>
+      </div>
+      <div class="view-head"><h2>🖼 Your uploads</h2></div>
+      <div class="grid g4" id="teacherMedia"></div>
+    </section>
+
+    <!-- AI Tools -->
+    <section data-view-panel="aitools" class="hide">
+      <div class="greet"><h1>🤖 AI Tools for teachers</h1><p>The AI Tutor is your co-teacher — use it to draft explanations and answer student doubts.</p></div>
+      <div class="grid g3" style="margin-top:22px">
+        <div class="card"><div class="ico-tile tile-p">💬</div><h3>Draft an explanation</h3><p>“Explain photosynthesis to class 8 in simple Marathi.”</p><button class="btn btn-soft btn-sm" style="margin-top:12px" onclick="BSS_AI.open()">Open assistant</button></div>
+        <div class="card"><div class="ico-tile tile-a">➗</div><h3>Lesson examples</h3><p>“Give 5 real-life examples of fractions for class 5.”</p><button class="btn btn-soft btn-sm" style="margin-top:12px" onclick="BSS_AI.open()">Open assistant</button></div>
+        <div class="card"><div class="ico-tile tile-v">🌐</div><h3>Translate material</h3><p>Use the translate tool to convert your notes into any language.</p><a class="btn btn-soft btn-sm" style="margin-top:12px" href="index.html#translate">Open translator</a></div>
+      </div>
+    </section>
+
+    <!-- Analytics -->
+    <section data-view-panel="analytics" class="hide">
+      <div class="greet"><h1>📊 Analytics</h1><p>Views and engagement across your lessons.</p></div>
+      <div class="sec-card" id="analyticsBox" style="margin-top:22px"></div>
+    </section>
+
+    <!-- Settings -->
+    <section data-view-panel="settings" class="hide">
+      <div class="greet"><h1>⚙️ Settings</h1><p>Account and preferences.</p></div>
+      <div class="grid g2" style="margin-top:22px">
+        <div class="card">
+          <h3>👤 Account</h3>
+          <div id="accountInfo2" style="color:var(--muted);font-size:14px;margin-bottom:14px">—</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-outline btn-sm" onclick="openModal('loginModal')">🔑 Change password</button>
+            <button class="btn btn-danger btn-sm" data-logout>🚪 Logout</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>🗣 Default lesson language</h3>
+          <p style="color:var(--muted);font-size:14px;margin-bottom:12px">Used when you create a new lesson (change per-lesson in the editor).</p>
+          <select class="lang-select" id="tDefaultLang" data-langs style="width:100%;max-width:100%;padding:12px 15px;border-radius:12px"></select>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="container footer-base"><span>© 2026 Bhasha Shiksha Setu · SIH26042</span><span>Teacher Mode — connected to backend 👩‍🏫</span></div>
+</footer>
+
+<div class="overlay" id="loginModal">
+  <div class="modal">
+    <button class="icon-btn modal-x" onclick="closeModal('loginModal')">✕</button>
+    <h3>Teacher login 👩‍🏫</h3><p class="sub">Login with your teacher account.</p>
+    <form id="loginForm">
+      <div class="field"><label>Email / Username</label><input id="loginId" type="text" required></div>
+      <div class="field"><label>Password</label><input id="loginPassword" type="password" required></div>
+      <button class="btn btn-primary btn-block" id="loginSubmit" type="submit">Login</button>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="lessonEditorModal">
+  <div class="modal lg-xl">
+    <button class="icon-btn modal-x" onclick="closeModal('lessonEditorModal')">✕</button>
+    <h3 id="editorTitle">Create Lesson</h3>
+    <p class="sub">Fields marked * are required. Content blocks can be text, image, video or document.</p>
+    <form id="lessonForm">
+      <div class="field-row">
+        <div class="field"><label>Title *</label><input id="lTitle" required maxlength="200" placeholder="e.g. Introduction to Photosynthesis"></div>
+        <div class="field"><label>Subject *</label><input id="lSubject" required maxlength="100" placeholder="e.g. Science"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Class / Grade</label><input id="lGrade" maxlength="20" placeholder="e.g. 8"></div>
+        <div class="field"><label>Language</label><select id="lLang" data-langs></select></div>
+      </div>
+      <div class="field"><label>Description</label><textarea id="lDescription" maxlength="5000"></textarea></div>
+      <div class="field-row">
+        <div class="field"><label>Thumbnail URL (or /uploads/…)</label><input id="lThumb" placeholder="https://… or leave empty"></div>
+        <div class="field"><label>Status</label><select id="lStatus"><option value="draft">Draft</option><option value="published">Published</option></select></div>
+      </div>
+      <label style="font-weight:800;font-size:14px;display:block;margin:8px 0 10px">Content blocks</label>
+      <div id="blocks"></div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <button type="button" class="btn btn-outline btn-sm" onclick="addBlock('text')">＋ Text</button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="addBlock('image')">＋ Image</button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="addBlock('video')">＋ Video</button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="addBlock('document')">＋ Document</button>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button type="button" class="btn btn-outline" onclick="closeModal('lessonEditorModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="lessonSaveBtn">💾 Save lesson</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="uploadModal">
+  <div class="modal">
+    <button class="icon-btn modal-x" onclick="closeModal('uploadModal')">✕</button>
+    <h3>📤 Upload media</h3><p class="sub">Images, videos or documents · max 50 MB.</p>
+    <div class="field"><label>File</label><input type="file" id="upFile2" accept=".jpg,.jpeg,.png,.webp,.svg,.gif,.mp4,.pdf,.doc,.docx,.txt"></div>
+    <div class="field"><label>Title (optional)</label><input id="upTitle2" maxlength="200"></div>
+    <div class="field"><label>Description (optional)</label><input id="upDesc2" maxlength="2000"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="closeModal('uploadModal')">Cancel</button>
+      <button class="btn btn-primary" id="upBtn2">⬆ Upload</button>
+    </div>
+  </div>
+</div>
+
+<script>
+window.__blockSeq = 0;
+function addBlock(type, existing = {}) {
+  const host = $("#blocks");
+  const id = "blk" + (++window.__blockSeq);
+  const row = document.createElement("div");
+  row.className = "card";
+  row.style.cssText = "margin-bottom:12px;padding:16px;box-shadow:none";
+  row.dataset.type = type;
+  row.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <b style="font-size:12.5px">${type.toUpperCase()}</b><button type="button" class="btn btn-danger btn-sm" onclick="this.closest('.card').remove()">Remove</button>
+    </div>
+    <div class="field"><label>Title</label><input class="bTitle" maxlength="200" value="${escapeHtml(existing.title || "")}"></div>
+    ${type === "text" ? `<div class="field"><label>Explanation</label><textarea class="bContent" style="min-height:110px">${escapeHtml(existing.content || "")}</textarea></div>` : ""}
+    ${type !== "text" ? `<div class="field"><label>URL / file path</label><input class="bUrl" maxlength="500" value="${escapeHtml(existing.url || "")}" placeholder="${type === "image" ? "/uploads/… or https://…" : type === "video" ? "YouTube link or https://…" : "/uploads/file.pdf or https://…"}"></div>` : ""}`;
+  host.appendChild(row);
+}
+
+let __teacherDash = null;
+
+function saveLangPref2() {
+  // teachers' default lesson language is stored client-side as a convenience
+  localStorage.setItem("t_default_lesson_lang", $("#tDefaultLang").value);
+  toast("Default lesson language saved.");
+}
+
+window.PAGE_INIT = async function () {
+  $$(".side-item").forEach(b => b.addEventListener("click", () => switchView(b.dataset.view)));
+  $$("[data-goto]").forEach(b => b.addEventListener("click", () => switchView(b.dataset.goto)));
+
+  function switchView(name) {
+    $$(".side-item").forEach(b => b.classList.toggle("active", b.dataset.view === name));
+    $$("[data-view-panel]").forEach(p => p.classList.toggle("hide", p.dataset.viewPanel !== name));
+  }
+  window.switchView = switchView;
+
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  $("#tGreet").textContent = `${greet}, Teacher 👋`;
+
+  const user = currentUser();
+  const note = $("#loginNote");
+  if (!user) { note.classList.remove("hide"); return; }
+  if (!["teacher", "admin"].includes(user.role)) {
+    note.classList.remove("hide");
+    note.textContent = `You are logged in as ${user.role}. This page is for teachers and admins.`;
+    return;
+  }
+
+  $("#sideAvatar").textContent = initials(user.name);
+  $("#sideName").textContent = user.name;
+  $("#sideEmail").textContent = user.email;
+  $("#tDefaultLang").value = localStorage.getItem("t_default_lesson_lang") || "English";
+  $("#tDefaultLang").addEventListener("change", saveLangPref2);
+  $("#accountInfo2").innerHTML = `<b style="color:var(--ink)">${escapeHtml(user.name)}</b> · ${escapeHtml(user.email)}<br>Role: <span class="chip" style="background:var(--psoft);color:var(--p1)">${escapeHtml(user.role)}</span>`;
+
+  async function load() {
+    const d = await api("/teacher/dashboard");
+    __teacherDash = d;
+    $("#tStudents").textContent = d.stats.students;
+    $("#tMyLessons").textContent = d.stats.my_lessons;
+    $("#tPublished").textContent = d.stats.published;
+    $("#tViews").textContent = d.stats.total_views;
+    $(".page-drafts-badge").textContent = d.stats.drafts ? "• " + d.stats.drafts + " draft(s) not published yet" : "";
+
+    const cardL = (l) => `
+      <div class="card lesson-card">
+        <div class="lesson-meta">
+          <span class="chip subj">${escapeHtml(l.subject)}</span>
+          <span class="chip lang">🗣 ${escapeHtml(l.language)}</span>
+          <span class="chip ${l.status === "published" ? "pub" : "draft"}">${escapeHtml(l.status)}</span>
+        </div>
+        <h3>${escapeHtml(l.title)}</h3>
+        <p>${escapeHtml((l.description || "").slice(0, 90))}…</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-soft btn-sm" onclick="editLesson(${l.id})">✏️ Edit</button>
+          <button class="btn btn-sm ${l.status === "published" ? "btn-outline" : "btn-accent"}" onclick="togglePublish(${l.id})">${l.status === "published" ? "📥 Unpublish" : "🚀 Publish"}</button>
+          <button class="btn btn-danger btn-sm" onclick="delLesson(${l.id})">🗑</button>
+        </div>
+      </div>`;
+
+    $("#dashLessons").innerHTML = d.lessons.length ? d.lessons.slice(0, 6).map(cardL).join("")
+      : '<div class="empty" style="grid-column:1/-1"><div class="big">📚</div>No lessons yet — create your first one!</div>';
+
+    $("#lessonsBody").innerHTML = d.lessons.length ? d.lessons.map(l => `
+      <tr>
+        <td><b>${escapeHtml(l.title)}</b><br><small style="color:var(--muted)">${escapeHtml(l.description || "").slice(0, 46)}</small></td>
+        <td>${escapeHtml(l.subject)}</td><td>${escapeHtml(l.language)}</td><td>${escapeHtml(l.grade || "—")}</td>
+        <td>${l.views}</td>
+        <td><span class="chip ${l.status === "published" ? "pub" : "draft"}">${escapeHtml(l.status)}</span></td>
+        <td style="text-align:right;white-space:nowrap">
+          <button class="btn btn-sm btn-soft" onclick="editLesson(${l.id})">✏️</button>
+          <button class="btn btn-sm ${l.status === "published" ? "btn-outline" : "btn-accent"}" onclick="togglePublish(${l.id})">${l.status === "published" ? "📥" : "🚀"}</button>
+          <button class="btn btn-sm btn-danger" onclick="delLesson(${l.id})">🗑</button>
+        </td>
+      </tr>`).join("") : '<tr><td colspan="7" class="empty">No lessons yet — click <b>＋ New Lesson</b>!</td></tr>';
+
+    const students = await api("/teacher/students");
+    const rowsHtml = students.length ? students.map(s => `
+      <tr>
+        <td><b>${s.student ? escapeHtml(s.student.name) : "—"}</b></td>
+        <td>${escapeHtml(s.lesson_title || "—")}</td>
+        <td><div class="progress-track" style="max-width:160px"><div class="progress-fill" style="width:${s.progress}%"></div></div></td>
+        <td><span class="chip ${s.status === "completed" ? "pub" : "gray"}">${escapeHtml(s.status)}</span></td>
+        <td>${fmtDate(s.updated_at)}</td>
+      </tr>`).join("") : '<tr><td colspan="5" class="empty">No student activity yet.</td></tr>';
+    $("#studentsBody").innerHTML = rowsHtml;
+    $("#studentsBody2").innerHTML = rowsHtml;
+
+    // Analytics: views + engagement
+    const total = Math.max(d.stats.total_views, 1);
+    $("#analyticsBox").innerHTML = `
+      <h3>👀 Views per lesson</h3>
+      ${d.lessons.map(l => `
+        <div class="progress-row" style="padding:10px 0">
+          <b style="font-size:13.5px;min-width:190px;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(l.title)}</b>
+          <div class="progress-track grow"><div class="progress-fill" style="width:${Math.round((l.views / total) * 100)}%"></div></div>
+          <b style="font-size:13px;min-width:56px;text-align:right">${l.views} views</b>
+        </div>`).join("") || '<div class="empty">No lessons yet.</div>'}
+      <p style="color:var(--muted);font-size:13px;margin-top:8px">💡 Publish more lessons and share the site — every view counts!</p>`;
+  }
+
+  try { await load(); } catch (e) { note.classList.remove("hide"); note.textContent = "⚠️ " + e.message; }
+
+  /* -------- create / edit -------- */
+  const openEditor = async (lesson) => {
+    $("#editorTitle").textContent = lesson ? "Edit Lesson" : "Create Lesson";
+    $("#lTitle").value = lesson?.title || "";
+    $("#lSubject").value = lesson?.subject || "";
+    $("#lGrade").value = lesson?.grade || "";
+    $("#lDescription").value = lesson?.description || "";
+    $("#lThumb").value = lesson?.thumbnail || "";
+    $("#lStatus").value = lesson?.status || "draft";
+    $("#lLang").value = (lesson && lesson.language) || localStorage.getItem("t_default_lesson_lang") || "English";
+    $("#blocks").innerHTML = "";
+    (lesson?.content_items || []).forEach((c, i) => addBlock(c.type, c));
+    openModal("lessonEditorModal");
+  };
+  window.openEditor = openEditor;
+  ["#newLessonBtn", "#newLessonBtn2", "#newLessonBtn3"].forEach(sel => {
+    const el = $(sel);
+    if (el) el.addEventListener("click", () => { window.__editingLessonId = null; openEditor(null); });
+  });
+
+  $("#lessonForm").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const blocks = $$("#blocks .card").map((row, i) => {
+      const type = row.dataset.type;
+      return { type, title: $(".bTitle", row).value,
+        content: type === "text" ? $(".bContent", row).value : "",
+        url: type !== "text" ? $(".bUrl", row).value : "",
+        sort_order: i };
+    });
+    const payload = {
+      title: $("#lTitle").value.trim(), subject: $("#lSubject").value.trim(),
+      grade: $("#lGrade").value.trim(), description: $("#lDescription").value,
+      thumbnail: $("#lThumb").value.trim(), language: $("#lLang").value,
+      status: $("#lStatus").value, content_items: blocks,
+    };
+    const btn = $("#lessonSaveBtn"); btn.disabled = true;
+    try {
+      if (window.__editingLessonId) {
+        await api("/teacher/lessons/" + window.__editingLessonId, { method: "PUT", body: payload });
+        toast("Lesson updated ✨");
+        window.__editingLessonId = null;
+      } else {
+        await api("/teacher/lessons", { method: "POST", body: payload });
+        toast("Lesson created 🎉");
+      }
+      closeModal("lessonEditorModal");
+      await load();
+    } catch (e) { toast(e.message, "err"); }
+    finally { btn.disabled = false; }
+  });
+
+  window.editLesson = async (id) => {
+    try {
+      const l = await api("/lessons/" + id);
+      window.__editingLessonId = id;
+      openEditor(l);
+    } catch (e) { toast(e.message, "err"); }
+  };
+  window.togglePublish = async (id) => {
+    try { await api(`/teacher/lessons/${id}/publish`, { method: "POST" }); toast("Status updated ✔"); await load(); }
+    catch (e) { toast(e.message, "err"); }
+  };
+  window.delLesson = async (id) => {
+    if (!confirm("Delete this lesson permanently? This cannot be undone.")) return;
+    try { await api("/teacher/lessons/" + id, { method: "DELETE" }); toast("Lesson deleted."); await load(); }
+    catch (e) { toast(e.message, "err"); }
+  };
+
+  /* -------- media upload -------- */
+  const doUpload = async (file, title, desc) => {
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("title", title || "");
+    fd.append("description", desc || "");
+    const res = await fetch("/api/admin/media", {
+      method: "POST",
+      headers: { "Authorization": "Bearer " + authToken(), "X-Guest-Id": guestId() },
+      body: fd,
+    });
+    const data = await res.json();
+    if (!res.ok || data.success === false) throw new Error(data.message || "Upload failed.");
+    return data.data;
+  };
+  const loadMedia = async () => {
+    try {
+      const media = await api("/admin/media");
+      $("#teacherMedia").innerHTML = media.slice(0, 8).map(m => `
+        <div class="card" style="padding:14px">
+          <div class="lesson-thumb" style="height:96px;font-size:30px">${m.file_type === "image" ? `<img src="${escapeHtml(m.url)}" loading="lazy">` : m.file_type === "video" ? "🎬" : "📄"}</div>
+          <b style="font-size:12.5px;display:block;margin:8px 0 2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escapeHtml(m.original_name)}">${escapeHtml(m.title || m.original_name)}</b>
+          <small style="color:var(--muted);font-size:11px">${escapeHtml(m.file_type)} · ${(m.size / 1024).toFixed(0)} KB</small>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <button class="btn btn-sm btn-soft" onclick="navigator.clipboard.writeText('${escapeHtml(m.url)}');toast('URL copied')">📋</button>
+            <button class="btn btn-sm btn-danger" onclick="delTeacherMedia(${m.id})">🗑</button>
+          </div>
+        </div>`).join("") || '<div class="empty" style="grid-column:1/-1">No uploads yet.</div>';
+    } catch {}
+  };
+  window.delTeacherMedia = async (id) => {
+    if (!confirm("Delete this file?")) return;
+    try { await api("/admin/media/" + id, { method: "DELETE" }); toast("Deleted."); loadMedia(); }
+    catch (e) { toast(e.message, "err"); }
+  };
+  $("#upBtn").addEventListener("click", async () => {
+    const file = $("#upFile").files[0];
+    if (!file) { toast("Choose a file first.", "warn"); return; }
+    const btn = $("#upBtn"); btn.disabled = true; btn.textContent = "Uploading…";
+    try {
+      const m = await doUpload(file, $("#upTitle").value, $("#upDesc").value);
+      toast("Uploaded! URL: " + m.url);
+      $("#upFile").value = ""; $("#upTitle").value = ""; $("#upDesc").value = "";
+      loadMedia();
+    } catch (e) { toast(e.message, "err"); }
+    finally { btn.disabled = false; btn.textContent = "⬆ Upload"; }
+  });
+  loadMedia();
+};
+</script>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# Secrets & environment
+.env
+*.env.local
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Database (SQLite dev)
+*.db
+*.sqlite3
+
+# Uploads (user content — keep the folder, ignore files)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+
+# Flask-SQLAlchemy instance folder (dev db)
+instance/

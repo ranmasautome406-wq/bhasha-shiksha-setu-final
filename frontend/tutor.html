@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tutor | Bhasha Shiksha Setu</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%234338ca'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white'>ब</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="CSS/style.css">
+</head>
+<body data-page="tutor">
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html"><span class="brand-logo">ब</span><span>Bhasha Shiksha Setu<small>AI Tutor Mode</small></span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="student.html">Student</a>
+      <a href="teacher.html">Teacher</a>
+      <a href="tutor.html" class="active">AI Tutor</a>
+    </nav>
+    <div class="nav-right">
+      <div class="nav-user-chip" data-auth="in">
+        <span class="av" id="navUserAvatar">?</span><b id="navUserName">…</b>
+        <button class="icon-btn" data-logout title="Logout" style="font-size:16px">🚪</button>
+      </div>
+      <button class="btn btn-outline btn-sm hide-mobile" data-auth="out" onclick="openModal('loginModal')">Login</button>
+      <button class="icon-btn burger" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+    </div>
+  </div>
+</header>
+
+<main class="container" style="padding:46px 20px 80px">
+  <div class="tchat-wrap">
+    <div class="greet" style="text-align:center;margin-bottom:26px">
+      <span class="eyebrow"><span class="dot"></span> Bhasha AI Tutor</span>
+      <h1 style="font-size:clamp(26px,3.6vw,38px);font-weight:800">Ask anything — <span class="grad-text">in any language</span> 🤖</h1>
+      <p style="color:var(--muted);max-width:560px;margin:12px auto 0">Type or speak (🎤) your question, pick the answer language, and listen (🔊) to the reply.</p>
+    </div>
+
+    <!-- Tutor-only panel -->
+    <div class="card hide" id="tutorPanel" style="margin-bottom:22px">
+      <b style="font-size:16px">🧑‍🎓 Questions students asked (tutor view)</b>
+      <div id="tutorQuestions" style="margin-top:12px;font-size:14px;color:var(--muted)">Loading…</div>
+    </div>
+
+    <div class="tchat-card">
+      <div class="tchat-head">
+        <span class="big-av">🤖</span>
+        <div><b>Bhasha AI Tutor</b><small id="modeDisc">Online · answers in your language</small></div>
+        <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+          <span class="ai-disc" style="background:rgba(255,255,255,.14);color:#e0e7ff;border-color:transparent">⚡ AI</span>
+          <button class="btn" style="background:rgba(255,255,255,.15);color:#fff;border:none" id="tutorClear">🗑 Clear</button>
+        </div>
+      </div>
+      <div class="tchat-body" id="chatScroll">
+        <div class="tmsg">
+          <span class="tav">🤖</span>
+          <div class="tb">Namaste! 🙏 I am <b>Bhasha AI Tutor</b>. Ask me about any lesson, science, maths, grammar, computers — or just say hello. I answer in <b>your language</b>!</div>
+        </div>
+      </div>
+      <div class="tq-chips" id="sampleQs">
+        <button>Explain photosynthesis</button>
+        <button>Explain in Marathi</button>
+        <button>Explain gravity simply</button>
+        <button>Give me study tips</button>
+        <button>What is Bhasha Shiksha Setu?</button>
+      </div>
+      <div class="ai-input-row" style="border-top:none;padding:15px 26px 22px">
+        <button class="ai-mic" id="micBtn" title="Ask by voice">🎤</button>
+        <input id="tutorInput" placeholder="Type your question…" autocomplete="off">
+        <select id="tutorLang" class="lang-select" data-langs style="max-width:125px"></select>
+        <button class="ai-send" id="tutorSend">➤</button>
+      </div>
+    </div>
+
+    <div class="grid g3" style="margin-top:30px">
+      <div class="card"><div class="ico-tile tile-p">🧪</div><h3>Science</h3><p>“Explain photosynthesis in Marathi”</p></div>
+      <div class="card"><div class="ico-tile tile-v">➗</div><h3>Mathematics</h3><p>“Why is 3/4 bigger than 1/2?”</p></div>
+      <div class="card"><div class="ico-tile tile-a">🗣</div><h3>Any language</h3><p>Ask in English, answer in Marathi — or reverse it.</p></div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer-base"><span>© 2026 Bhasha Shiksha Setu · SIH26042</span><span>Tutor/AI Tutor Mode — connected to backend 🤖</span></div>
+</footer>
+
+<div class="overlay" id="loginModal">
+  <div class="modal">
+    <button class="icon-btn modal-x" onclick="closeModal('loginModal')">✕</button>
+    <h3>Login 🤖</h3><p class="sub">Login to see tutor tools (student questions + notes).</p>
+    <form id="loginForm">
+      <div class="field"><label>Email / Username</label><input id="loginId" type="text" required></div>
+      <div class="field"><label>Password</label><input id="loginPassword" type="password" required></div>
+      <button class="btn btn-primary btn-block" id="loginSubmit" type="submit">Login</button>
+    </form>
+  </div>
+</div>
+
+<script>
+window.PAGE_INIT = async function () {
+  const scroll = $("#chatScroll");
+  const input = $("#tutorInput");
+  const sendBtn = $("#tutorSend");
+  const micBtn = $("#micBtn");
+  const clearBtn = $("#tutorClear");
+
+  function addMsg(who, text, withListen = false) {
+    const div = document.createElement("div");
+    div.className = "tmsg" + (who === "me" ? " me" : "");
+    const isMe = who === "me";
+    div.innerHTML = `
+      ${isMe ? "" : '<span class="tav">🤖</span>'}
+      <div class="tb">
+        ${escapeHtml(text)}
+        ${withListen && text ? `<div class="ta">
+          <button onclick="BSS_VOICE.listen(this)" data-text="${escapeHtml(text)}" data-listening="0">🔊 Listen</button>
+          <button onclick="BSS_VOICE.stop()">⏹ Stop</button>
+        </div>` : ""}
+      </div>`;
+    scroll.appendChild(div);
+    scroll.scrollTop = scroll.scrollHeight;
+    return div;
+  }
+
+  async function send(textOverride) {
+    const text = (textOverride || input.value).trim();
+    if (!text) return;
+    input.value = "";
+    addMsg("me", text);
+    const typing = addMsg("bot", "");
+    typing.querySelector(".tb").innerHTML = '<span class="ptyping"><span></span><span></span><span></span></span>';
+    const lang = $("#tutorLang").value;
+    localStorage.setItem("bss_lang", lang);
+    try {
+      const data = await api("/chat", { method: "POST",
+        body: { message: text, language: lang, context: "tutor",
+                guest_id: guestId(), user_id: (currentUser() || {}).id || null } });
+      typing.remove();
+      addMsg("bot", data.reply, true);
+    } catch (e) {
+      typing.remove();
+      addMsg("bot", "⚠️ " + e.message);
+    }
+  }
+
+  sendBtn.onclick = () => send();
+  input.addEventListener("keydown", (e) => { if (e.key === "Enter") send(); });
+  $$("#sampleQs button").forEach(b => b.addEventListener("click", () => send(b.textContent)));
+
+  clearBtn.onclick = async () => {
+    try { await api("/chat/history", { method: "DELETE" }); scroll.innerHTML = ""; toast("Chat cleared."); }
+    catch (e) { toast(e.message, "err"); }
+  };
+
+  micBtn.onclick = () => {
+    if (!BSS_STT.supported) { toast("Voice input needs Chrome/Edge on desktop or Android.", "warn"); return; }
+    BSS_STT.start($("#tutorLang").value, {
+      onChange: (on) => { micBtn.classList.toggle("rec", on); micBtn.textContent = on ? "⏹" : "🎤"; },
+      onResult: (t) => { input.value = t; },
+    });
+  };
+
+  try {
+    const msgs = await api("/chat/history?limit=20");
+    if (msgs && msgs.length) {
+      scroll.innerHTML = "";
+      msgs.forEach(m => { addMsg("me", m.message); addMsg("bot", m.reply, true); });
+    }
+  } catch {}
+
+  const user = currentUser();
+  if (user && (user.role === "tutor" || user.role === "admin")) {
+    const panel = $("#tutorPanel");
+    panel.classList.remove("hide");
+    try {
+      const qs = await api("/tutor/questions");
+      $("#tutorQuestions").innerHTML = qs.length
+        ? qs.map(q => `<div style="padding:9px 0;border-bottom:1px solid var(--line)">
+            <b>${escapeHtml(q.message)}</b><br>
+            <small style="color:var(--muted)">${escapeHtml(q.reply.slice(0, 100))}… · ${fmtDate(q.created_at)}</small>
+          </div>`).join("")
+        : "No student questions yet.";
+    } catch (e) { $("#tutorQuestions").textContent = e.message; }
+  }
+};
+</script>
+<script src="script.js"></script>
+</body>
+</html>

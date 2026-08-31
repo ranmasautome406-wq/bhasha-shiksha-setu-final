@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 Lesson Management | Bhasha Shiksha Setu Admin</title>
+<link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body data-page="lessons">
+<div class="layout">
+  <aside class="sidebar">
+    <div class="side-brand"><span class="side-logo">ब</span><span><b>Bhasha Shiksha Setu</b><small>Admin Panel · SIH26042</small></span></div>
+    <nav class="side-nav">
+      <div class="side-sec">Overview</div>
+      <a href="dashboard.html" data-page="dashboard"><span class="n-ico">📊</span> Dashboard</a>
+      <a href="users.html" data-page="users"><span class="n-ico">👥</span> Users</a>
+      <div class="side-sec">Content</div>
+      <a href="lessons.html" data-page="lessons"><span class="n-ico">📚</span> Lessons</a>
+      <a href="content.html" data-page="content"><span class="n-ico">✏️</span> Content</a>
+      <a href="media.html" data-page="media"><span class="n-ico">🖼</span> Media Library</a>
+      <a href="announcements.html" data-page="announcements"><span class="n-ico">📢</span> Announcements</a>
+      <div class="side-sec">Intelligence</div>
+      <a href="ai.html" data-page="ai"><span class="n-ico">🤖</span> AI Assistant</a>
+      <a href="translations.html" data-page="translations"><span class="n-ico">🌐</span> Translations</a>
+      <a href="analytics.html" data-page="analytics"><span class="n-ico">📈</span> Analytics</a>
+      <a href="activity.html" data-page="activity"><span class="n-ico">🧾</span> Activity Logs</a>
+      <div class="side-sec">System</div>
+      <a href="settings.html" data-page="settings"><span class="n-ico">⚙️</span> Settings</a>
+      <div class="side-sec">Links</div>
+      <a href="/" target="_blank" rel="noopener"><span class="n-ico">🌐</span> View Website</a>
+      <a href="#" data-logout><span class="n-ico">🚪</span> Logout</a>
+    </nav>
+    <div class="side-user"><span class="av" id="sideAvatar">A</span><div><b id="sideName">Admin</b><small id="sideEmail">…</small></div></div>
+    <div class="side-foot"><span>SIH26042</span><span>v1.0</span></div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <button class="burger">☰</button>
+      <h1>📚 Lesson Management</h1>
+      <div class="topsearch"><input type="search" id="globalSearch" placeholder="Search this page…"></div>
+      <div class="top-actions">
+        <div style="position:relative" id="bellWrap">
+          <button class="icon-rounded" id="bellBtn" title="Notifications">🔔<span class="dot"></span></button>
+          <div class="dropdown" id="bellDrop" style="min-width:320px;right:0;left:auto"></div>
+        </div>
+        <div class="profile-chip" id="profileChip">
+          <span class="av" id="profileAvatar">A</span>
+          <div><b id="profileName">…</b><small id="profileEmail">…</small></div>
+          <span style="font-size:10px;color:var(--muted)">▾</span>
+          <div class="dropdown" id="profileDrop">
+            <div class="dd-head"><b id="ddName">Admin</b><small id="ddEmail">…</small></div>
+            <a href="#" data-open-change-pw>🔑 Change password</a>
+            <a href="/" target="_blank" rel="noopener">🌐 View website</a>
+            <a href="#" data-logout class="danger">🚪 Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input type="search" id="lessonSearch" class="grow" placeholder="🔍 Search title or subject…">
+      <select id="lessonStatus">
+        <option value="">All statuses</option><option value="published">Published</option>
+        <option value="draft">Draft</option>
+      </select>
+      <button class="btn btn-p" id="newLessonBtn">＋ New Lesson</button>
+    </div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Lesson</th><th>Subject</th><th>Language</th><th>Class</th><th>Views</th><th>Status</th><th style="text-align:right">Actions</th></tr></thead>
+        <tbody id="lessonsBody"></tbody>
+      </table>
+    </div>
+    <p class="mt" style="color:var(--muted);font-size:13px">💡 Published lessons appear instantly on the <a href="/" target="_blank" style="font-weight:700;color:var(--p1)">website</a> and in the Student dashboard.</p>
+
+<div class="overlay" data-modal="lessonEditorModal">
+  <div class="modal lg">
+    <button class="icon-btn modal-x" onclick="closeModal('lessonEditorModal')">✕</button>
+    <h3 id="lessonEditorTitle">Create Lesson</h3>
+    <p class="sub">Lessons with text, images, videos and documents — shown to students after publishing.</p>
+    <form id="lessonForm">
+      <div class="field-row">
+        <div class="field"><label>Title *</label><input id="lTitle" required maxlength="200"></div>
+        <div class="field"><label>Subject *</label><input id="lSubject" required maxlength="100"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Class / Grade</label><input id="lGrade" maxlength="20"></div>
+        <div class="field"><label>Language</label><select id="lLang">
+          <option>English</option><option>Marathi</option><option>Hindi</option><option>Gujarati</option>
+          <option>Bengali</option><option>Tamil</option><option>Telugu</option><option>Kannada</option>
+          <option>Malayalam</option><option>Punjabi</option><option>Urdu</option></select></div>
+      </div>
+      <div class="field"><label>Description</label><textarea id="lDesc" maxlength="5000"></textarea></div>
+      <div class="field-row">
+        <div class="field"><label>Thumbnail URL</label><input id="lThumb" placeholder="/uploads/… or https://…"></div>
+        <div class="field"><label>Status</label><select id="lStatus"><option value="draft">Draft</option><option value="published">Published</option></select></div>
+      </div>
+      <label style="font-weight:800;font-size:13px;display:block;margin:6px 0 10px">Content blocks</label>
+      <div id="blocks"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        <button type="button" class="btn btn-sm btn-g" onclick="lessonBlock('text')">＋ Text</button>
+        <button type="button" class="btn btn-sm btn-g" onclick="lessonBlock('image')">＋ Image</button>
+        <button type="button" class="btn btn-sm btn-g" onclick="lessonBlock('video')">＋ Video</button>
+        <button type="button" class="btn btn-sm btn-g" onclick="lessonBlock('document')">＋ Document</button>
+        <button type="button" class="btn btn-sm btn-d" onclick="$('#blocks').innerHTML=''">Clear all</button>
+      </div>
+      <button class="btn btn-p" style="width:100%;justify-content:center" type="submit">💾 Save lesson</button>
+    </form>
+  </div>
+</div>
+
+  </main>
+</div>
+<div class="overlay" data-modal="changePwModal">
+  <div class="modal">
+    <button class="icon-btn modal-x" onclick="closeModal('changePwModal')">✕</button>
+    <h3>Change password 🔒</h3><p class="sub">Use a strong password (min 6 characters).</p>
+    <form id="changePwForm">
+      <div class="field"><label>Current password</label><input type="password" id="pwCurrent" required></div>
+      <div class="field"><label>New password</label><input type="password" id="pwNew" minlength="6" required></div>
+      <button class="btn btn-p" style="width:100%;justify-content:center" type="submit">Update password</button>
+    </form>
+  </div>
+</div>
+<div id="toasts"></div>
+<script src="admin.js"></script>
+</body>
+</html>
