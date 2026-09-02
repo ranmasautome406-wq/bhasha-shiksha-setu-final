@@ -27,6 +27,7 @@
       <a href="teacher.html">Teacher</a>
       <a href="tutor.html">AI Tutor</a>
       <a href="#languages">Languages</a>
+      <a href="#video-dubbing">Video Dubbing</a>
       <a href="#about">About</a>
     </nav>
     <div class="nav-right">
@@ -187,6 +188,69 @@
   </div>
 </section>
 
+<!-- ============ VIDEO TRANSLATOR & LIVE DUBBING ============ -->
+<section id="video-dubbing" class="video-dubbing-section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><span class="dot"></span> Video Language Bridge</span>
+      <h2>Translate videos with <span class="grad-text">live dubbing</span> 🎬</h2>
+      <p>Upload a lesson video to create a dubbed version, or use your microphone for low-latency live voice translation.</p>
+    </div>
+
+    <div class="video-studio">
+      <div class="video-studio-top">
+        <div>
+          <span class="studio-badge">AI VIDEO DUBBING</span>
+          <h3>Make every lesson understandable</h3>
+          <p>Speech → Translation → Voice → Video</p>
+        </div>
+        <div class="studio-status" id="videoStatus">Checking dubbing services…</div>
+      </div>
+
+      <div class="video-grid">
+        <div class="video-panel">
+          <div class="panel-title">1. Upload your video</div>
+          <label class="video-drop" id="videoDrop" for="videoFile">
+            <span class="drop-icon">🎥</span>
+            <b>Choose a lesson video</b>
+            <small>MP4, WebM, MOV or M4V · up to 200 MB</small>
+            <input id="videoFile" type="file" accept="video/mp4,video/webm,video/quicktime,.m4v" hidden>
+          </label>
+          <div id="videoFileName" class="file-name"></div>
+          <video id="videoPreview" class="video-preview hide" controls playsinline></video>
+        </div>
+
+        <div class="video-panel">
+          <div class="panel-title">2. Choose languages</div>
+          <div class="video-fields">
+            <label>Spoken language<select id="videoSourceLang" class="lang-select" data-langs></select></label>
+            <label>Dub into<select id="videoTargetLang" class="lang-select" data-langs></select></label>
+          </div>
+          <button class="btn btn-primary btn-block" id="dubVideoBtn">🎙️ Create Dubbed Video</button>
+          <div class="pipeline" id="dubPipeline">
+            <span>🎤 Speech</span><i>→</i><span>🌐 Translate</span><i>→</i><span>🔊 Voice</span><i>→</i><span>🎬 Dub</span>
+          </div>
+          <div id="dubResult" class="dub-result hide"></div>
+        </div>
+      </div>
+
+      <div class="live-dub-box">
+        <div>
+          <span class="live-dot"></span><b>Live Dubbing Mode</b>
+          <p>Speak into the microphone and hear the translated voice almost immediately. Best for live classroom demonstrations.</p>
+        </div>
+        <div class="live-controls">
+          <select id="liveSourceLang" class="lang-select" data-langs></select>
+          <span class="arrow">→</span>
+          <select id="liveTargetLang" class="lang-select" data-langs></select>
+          <button class="btn btn-accent" id="liveDubBtn">🎤 Start Live Dubbing</button>
+        </div>
+        <div id="liveTranscript" class="live-transcript">Live transcript will appear here…</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ TRANSLATOR ============ -->
 <section id="translate">
   <div class="container">
@@ -293,7 +357,7 @@
         <p style="font-size:14px;max-width:300px" data-content="footer_text">Made with ❤️ for the Smart India Hackathon (SIH26042).</p>
       </div>
       <div><h4>Platform</h4><a href="student.html">Student Mode</a><a href="teacher.html">Teacher Mode</a><a href="tutor.html">AI Tutor</a><a href="#features">Features</a></div>
-      <div><h4>Company</h4><a href="#about">About</a><a href="#languages">Languages</a><a href="#translate">Translator</a><a href="/admin" target="_blank" rel="noopener">Admin Panel</a></div>
+      <div><h4>Company</h4><a href="#about">About</a><a href="#languages">Languages</a><a href="#translate">Translator</a><a href="#video-dubbing">Video Dubbing</a><a href="/admin" target="_blank" rel="noopener">Admin Panel</a></div>
       <div><h4>Contact</h4><a id="footEmail" href="mailto:admin@bhasha.setu">📧 admin@bhasha.setu</a><a id="footPhone" href="tel:+919876543210">📞 +91 98765 43210</a><a id="footTwitter" href="#" target="_blank" rel="noopener">𝕏 Twitter</a><a id="footYt" href="#" target="_blank" rel="noopener">▶ YouTube</a></div>
     </div>
     <div class="footer-base"><span>© 2026 Bhasha Shiksha Setu · Smart India Hackathon SIH26042</span><span>Frontend ↔ Backend ↔ Database connected ⚡</span></div>

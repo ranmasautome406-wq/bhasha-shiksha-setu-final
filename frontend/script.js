@@ -642,12 +642,77 @@ function bindTranslateTool() {
   }
 }
 
+/* ---------------- Video translation + live dubbing ---------------- */
+window.BSS_VIDEO = {
+  init() {
+    const file = $("#videoFile"), preview = $("#videoPreview"), name = $("#videoFileName");
+    if (!file) return;
+    file.addEventListener("change", () => {
+      const f = file.files && file.files[0];
+      if (!f) return;
+      if (f.size > 200 * 1024 * 1024) { toast("Please choose a video smaller than 200 MB.", "warn"); file.value = ""; return; }
+      if (name) name.textContent = `${f.name} · ${(f.size / 1024 / 1024).toFixed(1)} MB`;
+      if (preview) { preview.src = URL.createObjectURL(f); preview.classList.remove("hide"); }
+    });
+
+    const source = $("#videoSourceLang"), target = $("#videoTargetLang");
+    const liveSource = $("#liveSourceLang"), liveTarget = $("#liveTargetLang");
+    const fill = (sel, value) => { if (sel && BSS_STATE.languages.length) { sel.innerHTML = BSS_STATE.languages.map(l => `<option>${escapeHtml(l)}</option>`).join(""); sel.value = value; } };
+    fill(source, "English"); fill(target, "Marathi"); fill(liveSource, "English"); fill(liveTarget, "Marathi");
+
+    const status = $("#videoStatus");
+    api("/video/status").then(d => {
+      if (status) status.textContent = d.stt_available && d.tts_available ? "✓ Server dubbing ready" : "Live browser dubbing ready · server video dubbing needs STT + TTS";
+    }).catch(() => { if (status) status.textContent = "Live browser dubbing available"; });
+
+    $("#dubVideoBtn")?.addEventListener("click", this.dub.bind(this));
+    $("#liveDubBtn")?.addEventListener("click", this.live.bind(this));
+  },
+  async dub() {
+    const file = $("#videoFile")?.files?.[0];
+    if (!file) { toast("Choose a video first.", "warn"); return; }
+    const btn = $("#dubVideoBtn"), result = $("#dubResult");
+    const fd = new FormData();
+    fd.append("video", file); fd.append("source_language", $("#videoSourceLang")?.value || "English"); fd.append("target_language", $("#videoTargetLang")?.value || "Marathi");
+    btn.disabled = true; btn.textContent = "⏳ Processing video…"; result?.classList.add("hide");
+    try {
+      const res = await fetch(API_BASE + "/video/dub", { method:"POST", headers:{"X-Guest-Id":guestId(), ...(authToken()?{"Authorization":"Bearer "+authToken()}: {})}, body:fd });
+      const data = await res.json();
+      if (!res.ok || data.success === false) throw new Error(data.message || "Dubbing failed.");
+      const d = data.data;
+      result.innerHTML = `<b>✅ Dubbed video ready!</b><br><span>${escapeHtml(d.translated_text.slice(0,240))}${d.translated_text.length>240?"…":""}</span><br><a href="${escapeHtml(d.video_url)}" target="_blank" rel="noopener">▶ Open dubbed video</a>`;
+      result.classList.remove("hide");
+    } catch (e) { result.textContent = "⚠️ " + e.message; result.classList.remove("hide"); result.style.background="#fff7ed"; }
+    finally { btn.disabled=false; btn.textContent="🎙️ Create Dubbed Video"; }
+  },
+  live() {
+    const btn = $("#liveDubBtn"), out = $("#liveTranscript");
+    if (!BSS_STT.supported) { toast("Live dubbing needs Chrome or Edge with microphone permission.", "warn"); return; }
+    if (BSS_STT.active) { BSS_STT.stop(); btn.textContent="🎤 Start Live Dubbing"; return; }
+    const src = $("#liveSourceLang")?.value || "English", dst = $("#liveTargetLang")?.value || "Marathi";
+    btn.textContent = "⏹ Stop Live Dubbing";
+    BSS_STT.start(src, {
+      onChange: on => { if (!on) btn.textContent="🎤 Start Live Dubbing"; },
+      onResult: async text => {
+        if (!text || !text.trim()) return;
+        out.textContent = "You: " + text;
+        try {
+          const d = await api("/translate", {method:"POST", body:{text, source_language:src, target_language:dst}});
+          out.textContent = `${src}: ${text}\n${dst}: ${d.translated_text}`;
+          BSS_VOICE.speak(d.translated_text, {language:dst, rate:1.0});
+        } catch (e) { out.textContent = "⚠️ " + e.message; }
+      }
+    });
+  }
+};
+
 /* ---------------- Boot ---------------- */
 document.addEventListener("DOMContentLoaded", async () => {
   updateNavAuth();
   bindLoginForm();
   bindRegisterForm();
   bindTranslateTool();
+  if (typeof BSS_VIDEO !== "undefined") BSS_VIDEO.init();
   $$(".burger").forEach(b => b.addEventListener("click", () => $(".nav-links")?.classList.toggle("open")));
 
   await loadSiteConfig();
