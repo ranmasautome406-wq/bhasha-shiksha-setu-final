@@ -1,7 +1,10 @@
-Flask==3.1.3
-Flask-Cors==6.0.1
-Flask-SQLAlchemy==3.1.1
-PyJWT==2.13.0
-python-dotenv==1.1.0
-werkzeug>=3.0
-gunicorn>=21.0
+flask
+whisper-timestamped
+openai-whisper
+transformers
+torch
+torchaudio
+gTTS
+moviepy
+opencv-python
+requests
