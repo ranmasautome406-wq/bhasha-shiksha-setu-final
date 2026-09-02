@@ -322,3 +322,22 @@ homepage → ask the AI assistant → change AI instructions in Settings → ask
   the prototype runs with zero external keys; add `AI_API_KEY` to unlock full LLM answers.
 - **Admin → everywhere**: change announcement/hero text/AI instructions in the
   admin and refresh the public site to see the change.
+
+## Video Translation & Live Dubbing
+
+The home page now includes a **Video Language Bridge**. It supports:
+
+- Video preview and language selection.
+- Uploaded-video dubbing: FFmpeg extracts speech audio, the configured STT service transcribes it, the existing translation service translates it, the configured TTS service generates the target voice, and FFmpeg muxes the new audio back into an MP4.
+- Live dubbing in the browser using Web Speech Recognition + the existing `/api/translate` endpoint + browser Speech Synthesis. This mode does not require server STT/TTS keys.
+
+### Uploaded-video dubbing setup
+
+The server needs FFmpeg plus two server-side HTTP services:
+
+- `STT_URL`: accepts JSON with base64 WAV audio and returns `{ "text": "..." }`.
+- `TTS_URL`: accepts JSON with `text` and `language`, and returns audio bytes.
+
+Set `STT_URL`, `STT_API_KEY`, `TTS_URL`, and `TTS_API_KEY` in `.env`. Keys are never sent to the browser.
+
+For a Render deployment, make sure FFmpeg is available in the runtime and that the service has enough temporary disk/RAM for video processing.
