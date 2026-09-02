@@ -39,7 +39,7 @@ class Config:
     LOGIN_LOCKOUT_MINUTES = 15        # lockout window
 
     # ---------- Security ----------
-    MAX_CONTENT_LENGTH = int(os.getenv("MAX_UPLOAD_MB", "50")) * 1024 * 1024
+    MAX_CONTENT_LENGTH = int(os.getenv("MAX_UPLOAD_MB", "200")) * 1024 * 1024
     UPLOAD_DIR = os.getenv("UPLOAD_DIR", str(BASE_DIR / "backend" / "uploads"))
     # Comma separated origins: e.g. https://site.com,https://admin.site.com
     CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*")
